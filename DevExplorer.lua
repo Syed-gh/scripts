@@ -407,12 +407,3 @@ wait(math.random(3, 5))
 Alert("DEX", 'You can press "Home" key to refresh DEX to fix errors')
 wait(math.random(3, 5))
 Alert("DEX", "You can change instance properties by clicking on its values in properties")
-
-while true do
-	wait(math.random(10, 15))
-	Alert("DEX", 'You can press "Home" key to refresh DEX to fix errors')
-	wait(math.random(10, 15))
-	Alert("DEX", "You can view instance children & properties by click on it")
-	wait(math.random(10, 15))
-	Alert("DEX", "You can change instance properties by clicking on its values in properties")
-end
