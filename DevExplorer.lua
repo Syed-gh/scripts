@@ -159,6 +159,10 @@ function Install()
 				table.insert(TAB1, v)
 			end
 			
+			if v.Name == "CoreGui" then
+				table.insert(TAB1, v)
+			end
+			
 		else
 			warn()
 		end
