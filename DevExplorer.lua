@@ -159,7 +159,7 @@ function Install()
 				table.insert(TAB1, v)
 			end
 			
-			if v.Name == "CoreGui" then
+			if v.Name == "ReplicatedStorage" then
 				table.insert(TAB1, v)
 			end
 			
