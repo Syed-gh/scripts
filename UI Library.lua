@@ -2,10 +2,21 @@ local Library = {}
 local Players = game:GetService("Players")
 local TweenService = game:GetService("TweenService")
 
-function Create(Class, Parent, Table)
+function getId()
+	local str = {"0","1","2","3","4","5","6","7","8","9","a","b","c","d","e","f","g","h","i","j","k","l","m","n","o","p","q","r","s","t","u","v","w","x","y","z"}
+	local toReturn = ""
+	for i, v in pairs(str) do
+		local addNew = math.random(1, #str)
+		addNew = str[addNew]
+		toReturn = toReturn .. addNew
+	end
+	return toReturn
+end
+
+function Library.Create(Class, Parent, Table)
 	local newObj = Instance.new(Class)
 	newObj.Parent = Parent
-	--newObj.Name = GiveName()
+	newObj.Name = getId()
 	for i, v in pairs(Table) do
 		local success = pcall(function()
 			return newObj[i]
