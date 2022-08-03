@@ -2,16 +2,16 @@ local Library = {}
 local Players = game:GetService("Players")
 local TweenService = game:GetService("TweenService")
 
-Library.create = function(classData)
-	local dataModel = Instance.new(classData.Data.Class)
-	dataModel.Parent = classData.Data.Parent
-	dataModel.Name = classData.Data.Name
+Library.create = function(Data)
+	local dataModel = Instance.new(Data.Class)
+	dataModel.Parent = Data.Parent
+	dataModel.Name = Data.Name
 
 	if dataModel:IsA("ValueBase") then
-		dataModel.Value = classData.Data.Value
+		dataModel.Value = Data.Value
 	end
 
-	return classData.Data.Class .. " Created"
+	return Data.Class .. " Created"
 end
 
 Library.GetUserId = function(Name)
