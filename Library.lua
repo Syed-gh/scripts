@@ -18,16 +18,30 @@ function Library.Create(Class, Parent, Table)
 	newObj.Parent = Parent
 	newObj.Name = getId()
 	for i, v in pairs(Table) do
-		local success = pcall(function()
+		local success, err = pcall(function()
 			return newObj[i]
 		end)
 		if (success) then
 			newObj[i] = v
 		else
-			warn()
+			warn(err)
 		end
 	end
 	return newObj
+end
+
+Library.Headshot = function(UserId)
+	local thumbType = Enum.ThumbnailType.HeadShot
+	local thumbSize = Enum.ThumbnailSize.Size100x100
+	local content, isReady = Players:GetUserThumbnailAsync(UserId, thumbType, thumbSize)
+	return content
+end
+
+Library.AvatarThumbnail = function(UserId)
+	local thumbType = Enum.ThumbnailType.AvatarThumbnail
+	local thumbSize = Enum.ThumbnailSize.Size420x420
+	local content, isReady = Players:GetUserThumbnailAsync(UserId, thumbType, thumbSize)
+	return content
 end
 
 Library.GetUserId = function(Name)
