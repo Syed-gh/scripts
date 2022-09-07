@@ -1,6 +1,15 @@
-local UILibrary = {}
+local UILibrary = {
+	
+	Keys = {
+		--["toggle1"] = {
+		--	Value = false
+		--}
+	}
+	
+}
 
-local lib = loadstring(game:HttpGet("https://raw.githubusercontent.com/Syed-gh/scripts/main/Library.lua"))()
+
+local lib = loadstring(game:HttpGet("https://raw.githubusercontent.com/Player788/luau1/main/lib.lua"))()
 local Players = game:GetService("Players")
 local RunService = game:GetService("RunService")
 local UserInputService = game:GetService("UserInputService")
@@ -11,8 +20,17 @@ local screenGui = lib.Create("ScreenGui", game.Players.LocalPlayer.PlayerGui--[[
 })
 local instanceLog = {}
 local textlog = {}
+local config = {Save = false, SaveFolderName = ""}
 
 function UILibrary:Window(Table)
+	
+	if Table.Save then
+		config.Save = Table.Save
+		config.SaveFolderName = Table.SaveFolderName
+	else
+		config.Save = false
+	end
+	
 	local mainFrame = lib.Create("Frame", screenGui, {
 		AnchorPoint = Vector2.new(0.5, 0.5);
 		BackgroundColor3 = Color3.fromRGB(34, 34, 34), 
@@ -386,7 +404,38 @@ function UILibrary:Window(Table)
 				end
 				return setLib
 			end
-
+			
+			function buttonsLibrary:AddParagraph(Text) --  finish
+				local buttonFrame = lib.Create("Frame", tabScrollFrame, {
+					BackgroundColor3 = Color3.fromRGB(44, 44, 44), 
+					BackgroundTransparency = 1, 
+					BorderSizePixel = 0, 
+					Position = UDim2.new(0, 0,0, 0), 
+					Size = UDim2.new(1, 0,0.1, 0),
+					--AutomaticSize = "Y",
+				})
+				local buttonFrame_corner = lib.Create("UICorner", buttonFrame, {
+					CornerRadius = UDim.new(0, 5)
+				})
+				local button = lib.Create("TextLabel", buttonFrame, {
+					BackgroundColor3 = Color3.fromRGB(44, 44, 44), 
+					BackgroundTransparency = 1, 
+					BorderSizePixel = 0, 
+					Position = UDim2.new(0, 0,0, 0), 
+					Size = UDim2.new(1, 0,1, 0),
+					Font = "GothamMedium",
+					Text = Text,
+					TextSize = 16,
+					TextColor3 = Color3.fromRGB(255, 255, 255),
+					TextXAlignment = "Left",
+				})
+				local setLib = {}
+				function setLib:Set(value)
+					button.Text = value
+				end
+				return setLib
+			end
+			
 			function buttonsLibrary:AddTextBox(Table)
 				local buttonFrame = lib.Create("Frame", tabScrollFrame, {
 					BackgroundColor3 = Color3.fromRGB(44, 44, 44), 
@@ -496,9 +545,14 @@ function UILibrary:Window(Table)
 				else
 					button.BackgroundColor3 = Color3.fromRGB(227, 67, 67)
 				end
-
-				local Toggle = Table.Default or false
-
+				
+				
+				if config.Save then 
+					UILibrary.Keys[Table.Key] = Filesystem(config.SaveFolderName..game.PlaceId, Table.Key, false)
+				end
+				
+				local Toggle = UILibrary.Keys[Table.Key] or Table.Default or false
+				
 				local function onActivate()
 					if (Toggle) then				
 						Toggle = false
@@ -912,6 +966,7 @@ function UILibrary:Notification(Table)
 	spawn(function()
 		for _, v in pairs(instanceLog) do
 			if v:IsA("Frame") then
+				
 				v:Destroy()
 			end
 		end
@@ -1004,16 +1059,25 @@ function Warn(err)
 	})
 end
 
-function Filesystem() -- Checks if the executor has filesystem
+function Filesystem(folder, file, value) -- Checks if the executor has filesystem
 	if typeof(isfolder) == "function" then
+		if isfolder(folder) then
+			if isfile(folder.."/"..file..".txt") then
+				local toReturn = readfile(folder.."/"..file..".txt")
+				return toReturn
+			else
+				writefile(folder.."/"..file..".txt", value)
+			end
+		else
+			makefolder(folder)
+			UILibrary:Notification({Title = '<font color="rgb(85, 170, 127)">Saves</font>', Content = "Saving " .. folder .. " into  client workspace"})
+		end
 	else
 		Warn("[Save] Your client does not have a filesystem")
 		return false
 	end
 end
-
---Filesystem()
-
+--Filesystem(Test1..game.PlaceId, flag, default)
 function UILibrary:Destroy()
 	screenGui:Destroy()
 end
