@@ -552,14 +552,14 @@ function UILibrary:Window(Table)
 					print("Init." .. config.SaveFolderName, Table.Key)
 				end
 				
-				local Toggle = UILibrary.Keys[Table.Key] or Table.Default or false
+				local Toggle = UILibrary.Keys[Table.Key] --or Table.Default or false
 				
 				local function onActivate()
 					if (Toggle) then				
 						Toggle = false
 						Filesystem(config.SaveFolderName, Table.Key, "false")
 						button.BackgroundColor3 = Color3.fromRGB(227, 67, 67)
-					elseif not (Toggle) then
+					else --not (Toggle) then
 						Toggle = true
 						Filesystem(config.SaveFolderName, Table.Key, "true")
 						button.BackgroundColor3 = Color3.fromRGB(85, 170, 127)
