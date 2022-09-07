@@ -549,6 +549,7 @@ function UILibrary:Window(Table)
 				
 				if config.Save then 
 					UILibrary.Keys[Table.Key] = Filesystem(config.SaveFolderName, Table.Key, "false")
+					print("Init. "..Table.Key, config.SaveFolderName)
 				end
 				
 				local Toggle = UILibrary.Keys[Table.Key] or Table.Default or false
