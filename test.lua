@@ -549,6 +549,7 @@ function UILibrary:Window(Table)
 				
 				if config.Save then 
 					UILibrary.Keys[Table.Key] = Filesystem(config.SaveFolderName, Table.Key, "false")
+					print("Init." .. config.SaveFolderName, Table.Key)
 				end
 				
 				local Toggle = UILibrary.Keys[Table.Key] or Table.Default or false
@@ -1069,6 +1070,7 @@ function Filesystem(folder, file, value) -- Checks if the executor has filesyste
 				return toReturn
 			else
 				writefile(folder.."/"..file..".txt", value)
+				print(folder.."/"..file..".txt", value)
 			end
 		else
 			makefolder(folder)
