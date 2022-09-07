@@ -9,7 +9,7 @@ local UILibrary = {
 }
 
 
-local lib = loadstring(game:HttpGet("https://raw.githubusercontent.com/Player788/luau1/main/lib.lua"))()
+local lib = require(script.Parent.ModuleScript) --loadstring(game:HttpGet("https://raw.githubusercontent.com/Player788/luau1/main/lib.lua"))()
 local Players = game:GetService("Players")
 local RunService = game:GetService("RunService")
 local UserInputService = game:GetService("UserInputService")
@@ -549,7 +549,6 @@ function UILibrary:Window(Table)
 				
 				if config.Save then 
 					UILibrary.Keys[Table.Key] = Filesystem(config.SaveFolderName, Table.Key, "false")
-					print("Init. "..Table.Key, config.SaveFolderName)
 				end
 				
 				local Toggle = UILibrary.Keys[Table.Key] or Table.Default or false
@@ -1067,11 +1066,9 @@ function Filesystem(folder, file, value) -- Checks if the executor has filesyste
 		if isfolder(folder) then
 			if isfile(folder.."/"..file..".txt") then
 				local toReturn = readfile(folder.."/"..file..".txt")
-				print(toReturn)
 				return toReturn
 			else
 				writefile(folder.."/"..file..".txt", value)
-				print("new txt created with name .. " .. file .. " with string " .. value)
 			end
 		else
 			makefolder(folder)
