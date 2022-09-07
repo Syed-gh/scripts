@@ -1066,9 +1066,11 @@ function Filesystem(folder, file, value) -- Checks if the executor has filesyste
 		if isfolder(folder) then
 			if isfile(folder.."/"..file..".txt") then
 				local toReturn = readfile(folder.."/"..file..".txt")
+				print(toReturn)
 				return toReturn
 			else
 				writefile(folder.."/"..file..".txt", value)
+				print("new txt created with name .. " file .. " with string " .. value)
 			end
 		else
 			makefolder(folder)
