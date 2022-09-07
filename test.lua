@@ -551,7 +551,7 @@ function UILibrary:Window(Table)
 					UILibrary.Keys[Table.Key] = Filesystem(config.SaveFolderName, Table.Key, "false")
 				end
 				
-				local Toggle = not UILibrary.Keys[Table.Key] or Table.Default or false
+				local Toggle = UILibrary.Keys[Table.Key] or Table.Default or false
 				
 				local function onActivate()
 					if (Toggle) then				
