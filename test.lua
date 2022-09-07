@@ -9,7 +9,7 @@ local UILibrary = {
 }
 
 
-local lib = loadstring(game:HttpGet("https://raw.githubusercontent.com/Player788/luau1/main/lib.lua"))()
+local lib = require(script.Parent.ModuleScript) --loadstring(game:HttpGet("https://raw.githubusercontent.com/Player788/luau1/main/lib.lua"))()
 local Players = game:GetService("Players")
 local RunService = game:GetService("RunService")
 local UserInputService = game:GetService("UserInputService")
@@ -548,10 +548,10 @@ function UILibrary:Window(Table)
 				
 				
 				if config.Save then 
-					UILibrary.Keys[Table.Key] = Filesystem(config.SaveFolderName..game.PlaceId, Table.Key, false)
+					UILibrary.Keys[Table.Key] = Filesystem(config.SaveFolderName, Table.Key, false)
 				end
 				
-				local Toggle = UILibrary.Keys[Table.Key] or Table.Default or false
+				local Toggle = not UILibrary.Keys[Table.Key] or Table.Default or false
 				
 				local function onActivate()
 					if (Toggle) then				
@@ -570,7 +570,7 @@ function UILibrary:Window(Table)
 						Warn(err)
 					end
 				end
-
+				onActivate()
 				button.Activated:Connect(function()
 					onActivate()
 				end)
