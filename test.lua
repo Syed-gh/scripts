@@ -1071,7 +1071,7 @@ function Filesystem(folder, file, value) -- Checks if the executor has filesyste
 				return toReturn
 			else
 				writefile(folder.."/"..file..".txt", value)
-				print("new txt created with name .. " file .. " with string " .. value)
+				print("new txt created with name .. " .. file .. " with string " .. value)
 			end
 		else
 			makefolder(folder)
