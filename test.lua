@@ -1,11 +1,11 @@
 local UILibrary = {
-	
+
 	Keys = {
 		--["toggle1"] = {
 		--	Value = false
 		--}
 	}
-	
+
 }
 
 
@@ -23,14 +23,14 @@ local textlog = {}
 local config = {Save = false, SaveFolderName = ""}
 
 function UILibrary:Window(Table)
-	
+
 	if Table.Save then
 		config.Save = Table.Save
 		config.SaveFolderName = Table.SaveFolderName
 	else
 		config.Save = false
 	end
-	
+
 	local mainFrame = lib.Create("Frame", screenGui, {
 		AnchorPoint = Vector2.new(0.5, 0.5);
 		BackgroundColor3 = Color3.fromRGB(34, 34, 34), 
@@ -220,7 +220,7 @@ function UILibrary:Window(Table)
 		end
 
 	end)
-	
+
 	iconButton.MouseButton1Down:Connect(function()
 		for _, v in pairs(textlog) do
 			print(v.Title or "Error", v.Content)
@@ -228,13 +228,13 @@ function UILibrary:Window(Table)
 		end
 		UILibrary:Notification({Title = "Console", Content = "[F9] Check Devconsole for script logs", Time = 5})
 	end)
-	
+
 	--local function Warn(err)
 	--	UILibrary:Notification({
 	--		Content = err,
 	--	})
 	--end
-	
+
 	local tabLibrary = {}
 
 	local currentTab
@@ -404,7 +404,7 @@ function UILibrary:Window(Table)
 				end
 				return setLib
 			end
-			
+
 			function buttonsLibrary:AddParagraph(Text) --  finish
 				local buttonFrame = lib.Create("Frame", tabScrollFrame, {
 					BackgroundColor3 = Color3.fromRGB(44, 44, 44), 
@@ -435,7 +435,7 @@ function UILibrary:Window(Table)
 				end
 				return setLib
 			end
-			
+
 			function buttonsLibrary:AddTextBox(Table)
 				local buttonFrame = lib.Create("Frame", tabScrollFrame, {
 					BackgroundColor3 = Color3.fromRGB(44, 44, 44), 
@@ -545,26 +545,26 @@ function UILibrary:Window(Table)
 				else
 					button.BackgroundColor3 = Color3.fromRGB(227, 67, 67)
 				end
-				
-				
+
+
 				if config.Save then 
-					UILibrary.Keys[Table.Key] = Filesystem(config.SaveFolderName, Table.Key, "true")
+					UILibrary.Keys[Table.Key] = Filesystem(config.SaveFolderName, Table.Key, "nil")
 					print("Init." .. config.SaveFolderName, Table.Key)
 				end
-				
+
 				local Toggle = UILibrary.Keys[Table.Key] --or Table.Default or false
-				
+
 				local function onActivate()
 					if (Toggle) then				
 						Toggle = false
 						if config.Save then 
-						UILibrary.Keys[Table.Key] = Filesystem(config.SaveFolderName, Table.Key, "false")
+							UILibrary.Keys[Table.Key] = Filesystem(config.SaveFolderName, Table.Key, "false")
 						end
 						button.BackgroundColor3 = Color3.fromRGB(227, 67, 67)
 					else --not (Toggle) then
 						Toggle = true
 						if config.Save then 
-						UILibrary.Keys[Table.Key] = Filesystem(config.SaveFolderName, Table.Key, "true")
+							UILibrary.Keys[Table.Key] = Filesystem(config.SaveFolderName, Table.Key, "true")
 						end
 						button.BackgroundColor3 = Color3.fromRGB(85, 170, 127)
 					end
@@ -973,7 +973,7 @@ function UILibrary:Notification(Table)
 	spawn(function()
 		for _, v in pairs(instanceLog) do
 			if v:IsA("Frame") then
-				
+
 				v:Destroy()
 			end
 		end
@@ -1038,15 +1038,15 @@ function UILibrary:Notification(Table)
 			})
 			return frame, frame_stroke, title, content
 		end
-		
+
 		local delay_ = Table.Time or 5
 		local frame, frame_stroke, title, content = gen()
-		
+
 		--content.Focused:Connect(function()
 		--	setclipboard(content.Text)
 		--	UILibrary:Notification({Title = "Script", Content = "content copied to clipboard!"})
 		--end)
-		
+
 		table.insert(instanceLog, frame)
 		table.insert(textlog, Table)
 		lib.Tween(frame, "Position", UDim2.new(0.5,0,0.85,0), "InOut", "Back", 0.25)
@@ -1071,10 +1071,14 @@ function Filesystem(folder, file, value) -- Checks if the executor has filesyste
 		if isfolder(folder) then
 			if isfile(folder.."/"..file..".txt") then
 				local toReturn = readfile(folder.."/"..file..".txt")
+
+				if value == toReturn then 
+					--isfile(folder.."/"..file..".txt") then
+					toReturn = writefile(folder.."/"..file..".txt", value)
+					print("Updated "..folder.."/"..file..".txt", value)
+				end
+				
 				return toReturn
-			elseif isfile(folder.."/"..file..".txt") then
-				writefile(folder.."/"..file..".txt", value)
-				print("Updated "..folder.."/"..file..".txt", value)
 			else
 				writefile(folder.."/"..file..".txt", value)
 				print("Created "..folder.."/"..file..".txt", value)
