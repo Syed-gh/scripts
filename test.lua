@@ -558,13 +558,15 @@ function UILibrary:Window(Table)
 					if (Toggle) then				
 						Toggle = false
 						if config.Save then 
-							UILibrary.Keys[Table.Key] = Filesystem(config.SaveFolderName, Table.Key, "true")
+							writefile(config.SaveFolderName.."/"..Table.Key..".txt", true)
+							--UILibrary.Keys[Table.Key] = Filesystem(config.SaveFolderName, Table.Key, "true")
 						end
 						button.BackgroundColor3 = Color3.fromRGB(227, 67, 67)
 					else --not (Toggle) then
 						Toggle = true
-						if config.Save then 
-							UILibrary.Keys[Table.Key] = Filesystem(config.SaveFolderName, Table.Key, "false")
+						if config.Save then
+							writefile(config.SaveFolderName.."/"..Table.Key..".txt", false)
+							--UILibrary.Keys[Table.Key] = Filesystem(config.SaveFolderName, Table.Key, "false")
 						end
 						button.BackgroundColor3 = Color3.fromRGB(85, 170, 127)
 					end
@@ -1072,11 +1074,11 @@ function Filesystem(folder, file, value) -- Checks if the executor has filesyste
 			if isfile(folder.."/"..file..".txt") then
 				local toReturn = readfile(folder.."/"..file..".txt")
 
-				if value ~= "nil" then 
+				--if value ~= "nil" then 
 					--isfile(folder.."/"..file..".txt") then
-					toReturn = writefile(folder.."/"..file..".txt", value)
-					print("Updated "..folder.."/"..file..".txt", value)
-				end
+					--toReturn = writefile(folder.."/"..file..".txt", value)
+					--print("Updated "..folder.."/"..file..".txt", value)
+				--end
 				
 				return toReturn
 			else
