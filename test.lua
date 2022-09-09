@@ -548,7 +548,7 @@ function UILibrary:Window(Table)
 
 
 				if config.Save then 
-					UILibrary.Keys[Table.Key] = Filesystem(config.SaveFolderName, Table.Key, "nil")
+					UILibrary.Keys[Table.Key] = Filesystem(config.SaveFolderName, Table.Key, "false")
 					print("Init." .. config.SaveFolderName, Table.Key)
 				end
 
