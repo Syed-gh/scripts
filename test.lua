@@ -1073,17 +1073,12 @@ function Filesystem(folder, file, value) -- Checks if the executor has filesyste
 		if isfolder(folder) then
 			if isfile(folder.."/"..file..".txt") then
 				local toReturn = readfile(folder.."/"..file..".txt")
-				print("Read " .. folder.."/"..file..".txt" , toReturn)
-				--if value ~= "nil" then 
-					--isfile(folder.."/"..file..".txt") then
-					--toReturn = writefile(folder.."/"..file..".txt", value)
-					--print("Updated "..folder.."/"..file..".txt", value)
-				--end
-				
+				print("Read " .. folder.."/"..file..".txt" , toReturn)		
 				return toReturn
 			else
-				writefile(folder.."/"..file..".txt", value)
+				local toReturn = writefile(folder.."/"..file..".txt", value)
 				print("Created "..folder.."/"..file..".txt", value)
+				return toReturn
 			end
 		else
 			makefolder(folder)
