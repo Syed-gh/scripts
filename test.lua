@@ -565,7 +565,7 @@ function UILibrary:Window(Table)
 					else --not (Toggle) then
 						Toggle = true
 						if config.Save then
-							writefile(config.SaveFolderName.."/"..Table.Key..".txt", "false")
+							writefile(config.SaveFolderName.."/"..Table.Key..".txt", "nil")
 							--UILibrary.Keys[Table.Key] = Filesystem(config.SaveFolderName, Table.Key, "false")
 						end
 						button.BackgroundColor3 = Color3.fromRGB(85, 170, 127)
