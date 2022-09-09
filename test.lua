@@ -1073,7 +1073,7 @@ function Filesystem(folder, file, value) -- Checks if the executor has filesyste
 		if isfolder(folder) then
 			if isfile(folder.."/"..file..".txt") then
 				local toReturn = readfile(folder.."/"..file..".txt")
-
+				print("Read " .. folder.."/"..file..".txt" , toReturn)
 				--if value ~= "nil" then 
 					--isfile(folder.."/"..file..".txt") then
 					--toReturn = writefile(folder.."/"..file..".txt", value)
