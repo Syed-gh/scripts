@@ -1068,13 +1068,16 @@ function Filesystem(folder, file, value) -- Checks if the executor has filesyste
 			if isfile(folder.."/"..file..".txt") then
 				local toReturn = readfile(folder.."/"..file..".txt")
 				return toReturn
+			elseif
+				writefile(folder.."/"..file..".txt", value)
+				print("Updated "..folder.."/"..file..".txt", value)
 			else
 				writefile(folder.."/"..file..".txt", value)
-				print(folder.."/"..file..".txt", value)
+				print("Created "..folder.."/"..file..".txt", value)
 			end
 		else
 			makefolder(folder)
-			UILibrary:Notification({Title = '<font color="rgb(85, 170, 127)">Saves</font>', Content = "Saving " .. folder .. " into  client workspace"})
+			UILibrary:Notification({Title = '<font color="rgb(85, 170, 127)">Saves</font>', Content = "Saving " .. folder .. " into client workspace"})
 		end
 	else
 		Warn("[Save] Your client does not have a filesystem")
