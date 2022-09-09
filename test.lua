@@ -1068,7 +1068,7 @@ function Filesystem(folder, file, value) -- Checks if the executor has filesyste
 			if isfile(folder.."/"..file..".txt") then
 				local toReturn = readfile(folder.."/"..file..".txt")
 				return toReturn
-			elseif
+			elseif isfile(folder.."/"..file..".txt") then
 				writefile(folder.."/"..file..".txt", value)
 				print("Updated "..folder.."/"..file..".txt", value)
 			else
