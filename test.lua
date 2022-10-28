@@ -1,28 +1,36 @@
-local UILibrary = {
-
-	Keys = {
-		--["toggle1"] = {
-		--	Value = false
-		--}
-	}
-
-}
+local UILibrary = {}
 
 
-local lib = loadstring(game:HttpGet("https://raw.githubusercontent.com/Syed-gh/scripts/main/Library.lua"))()
+local lib = loadstring(game:HttpGet("https://raw.githubusercontent.com/Player788/luau1/main/lib.lua"))()
 local Players = game:GetService("Players")
 local RunService = game:GetService("RunService")
 local UserInputService = game:GetService("UserInputService")
 
-local screenGui = lib.Create("ScreenGui", game.Players.LocalPlayer.PlayerGui--[[game.CoreGui]], {
+local screenGui = lib.Create("ScreenGui", game.CoreGui, {
 	IgnoreGuiInset = true,
 	ResetOnSpawn = false,
 })
 local instanceLog = {}
 local textlog = {}
 local config = {Save = false, SaveFolderName = ""}
+local Keys = {}
 
 function UILibrary:Window(Table)
+	local cache = {
+		HubName = Table.Name or game.Name, 
+		ScriptName = Table.ScriptName or '<font color="rgb(255, 255, 127)">UNLISTED</font>', 
+		Creator = Table.Creator or '<font color="rgb(255, 255, 127)">UNLISTED</font>',
+		Hotkey = Table.Hotkey[1] or "Comma"
+	}
+	Sys('<font color="rgb(85, 170, 127)">Loading..</font>', "["..cache.HubName.."] "  .. cache.ScriptName .. " by " .. cache.Creator, 60)
+
+
+	local mainkey
+	if Table.Hotkey then
+		mainkey = Enum.KeyCode[Table.Hotkey[1]]
+	else
+		mainkey = Enum.KeyCode["Comma"]
+	end
 
 	if Table.Save then
 		config.Save = Table.Save
@@ -37,9 +45,10 @@ function UILibrary:Window(Table)
 		BackgroundTransparency = 0, 
 		BorderSizePixel = 0, 
 		Position = UDim2.new(0.5, 0,0.5, 0), 
-		Size = UDim2.new(0.45, 0,0.5, 0), --UDim2.new(0.35, 0,0.4, 0)
+		Size = UDim2.new(0.35, 0,0.35, 0), --UDim2.new(0.35, 0,0.4, 0)
 		Active = true,
 		Draggable = true,
+		Visible = false,
 	})
 	local mainFrame_corner = lib.Create("UICorner", mainFrame, {
 		CornerRadius = UDim.new(0, 5)
@@ -69,7 +78,7 @@ function UILibrary:Window(Table)
 		Position = UDim2.new(0.5, 0,0.5, 0),
 		Size = UDim2.new(0.512, 0,0.512, 0),
 		ScaleType = Enum.ScaleType.Fit;
-		Image = "rbxassetid://"..Table.Icon or lib.Headshot(Players.LocalPlayer.UserId)
+		Image = Table.Icon or lib.Headshot(Players.LocalPlayer.UserId)
 	})
 	local closeButton = lib.Create("TextButton", topBar, {
 		AutoButtonColor = false,
@@ -83,14 +92,15 @@ function UILibrary:Window(Table)
 	})
 	local scriptName = lib.Create("TextButton", topBar, {
 		AutoButtonColor = false,
+		AnchorPoint = Vector2.new(0, 0.5),
 		BackgroundTransparency = 1,
-		Position = UDim2.new(0.05, 0,0, 0), 
-		Size = UDim2.new(0.15, 0,1, 0),
+		Position = UDim2.new(0.05, 0,0.5, 0), 
+		Size = UDim2.new(0.15, 0,0.5, 0),
 		Font = Enum.Font.SourceSansItalic,
 		--FontWeight = Enum.FontWeight.Book,
 		TextColor3 = Color3.fromRGB(255, 255, 255), 
 		Text = Table.ScriptName or "Editor",
-		TextScaled = false,
+		TextScaled = true,
 		AutomaticSize = "X",
 		TextSize = 16,
 		TextXAlignment = "Left",
@@ -124,17 +134,20 @@ function UILibrary:Window(Table)
 		Size = UDim2.new(1, 0,0.1, 0),
 	})
 	local headTextButton = lib.Create("TextButton", headTextFrame, {
-		BackgroundColor3 = Color3.fromRGB(29, 29, 29), 
+		BackgroundColor3 = Color3.fromRGB(29, 29, 29),
+		AnchorPoint = Vector2.new(0, 0.5),
 		AutoButtonColor = false,
 		BackgroundTransparency = 1,
 		BorderSizePixel = 0,
-		Position = UDim2.new(0, 0,0, 0), 
-		Size = UDim2.new(1, 0,1, 0),
+		Position = UDim2.new(0, 0,0.5, 0), 
+		Size = UDim2.new(1, 0,0.5, 0),
 		Font = "GothamMedium",
 		TextColor3 = Color3.fromRGB(255, 255, 255), 
 		Text = Table.Name or game.Name,
+		TextScaled = true,
 		TextSize = 20,
 		ZIndex = 2,
+		ClipsDescendants = true,
 	})
 	local headTextgradFrame1 = lib.Create("Frame", headTextFrame, {
 		BackgroundColor3 = Color3.fromRGB(29, 29, 29), 
@@ -210,7 +223,7 @@ function UILibrary:Window(Table)
 	local maintoggle = false
 	closeButton.MouseButton1Down:Connect(function()
 		if maintoggle then
-			lib.Tween(mainFrame, "Position", UDim2.new(0.5, 0,1.215, 0), "InOut", "Linear", 0.1)
+			lib.Tween(mainFrame, "Position", UDim2.new(0.5, 0,1.15, 0), "InOut", "Linear", 0.1)
 			closeButton.Text = "+"
 			maintoggle = false
 		else
@@ -219,6 +232,18 @@ function UILibrary:Window(Table)
 			maintoggle = true
 		end
 
+	end)
+
+	UserInputService.InputBegan:Connect(function(input, gpe)
+		if input.KeyCode == mainkey then
+			if Table.Hotkey and Table.Hotkey[2] == true then mainFrame.Visible = true return end
+			mainFrame.Visible = not mainFrame.Visible
+		end	
+	end)
+	UserInputService.InputEnded:Connect(function(input, gpe)
+		if input.KeyCode == mainkey then
+			if Table.Hotkey and Table.Hotkey[2] == true then mainFrame.Visible = false return end
+		end	
 	end)
 
 	iconButton.MouseButton1Down:Connect(function()
@@ -308,6 +333,7 @@ function UILibrary:Window(Table)
 				Position = UDim2.new(0, 0,0, 0), 
 				Size = UDim2.new(1, 0,0.1, 0), -- scale y 0.2
 				--AutomaticSize = "Y",
+				Visible = false, -- fix sections
 
 			})
 			local listlayout_tabScrollFrame = lib.Create("UIListLayout", sectionFrame, {
@@ -346,6 +372,16 @@ function UILibrary:Window(Table)
 					Size = UDim2.new(1, 0,0.1, 0),
 					--AutomaticSize = "Y",
 				})
+				local Button_highlight = lib.Create("Frame", buttonFrame, {
+					ZIndex = 2,
+					BackgroundColor3 = Color3.fromRGB(255, 255, 255),
+					BackgroundTransparency = 1,
+					BorderSizePixel = 0,
+					Size = UDim2.new(1, 0,1, 0),
+				})
+				local buttonhighlight_corner = lib.Create("UICorner", Button_highlight, {
+					CornerRadius = UDim.new(0, 5)
+				})
 				local buttonFrame_corner = lib.Create("UICorner", buttonFrame, {
 					CornerRadius = UDim.new(0, 5)
 				})
@@ -361,6 +397,19 @@ function UILibrary:Window(Table)
 					TextColor3 = Color3.fromRGB(255, 255, 255),
 					TextXAlignment = "Left",
 				})
+				
+				button.MouseEnter:Connect(function()
+					lib.Tween(Button_highlight, "BackgroundTransparency", 0.95, "InOut", "Linear", 0.1)
+				end)
+				button.MouseLeave:Connect(function()
+					lib.Tween(Button_highlight, "BackgroundTransparency", 1, "InOut", "Linear", 0.1)
+				end)
+				button.MouseButton1Down:Connect(function()
+					lib.Tween(Button_highlight, "BackgroundTransparency", 0.9, "InOut", "Linear", 0.01)
+				end)
+				button.MouseButton1Up:Connect(function()
+					lib.Tween(Button_highlight, "BackgroundTransparency", 0.95, "InOut", "Linear", 0.01)
+				end)
 				button.Activated:Connect(function()
 					local success, err = pcall(function()
 						return Table.Callback()
@@ -372,6 +421,11 @@ function UILibrary:Window(Table)
 						Warn(err)
 					end
 				end)
+				local setLib = {}
+				function setLib:Destroy()
+					buttonFrame:Destroy()
+				end
+				return setLib
 			end
 
 			function buttonsLibrary:AddLabel(Text)
@@ -405,8 +459,8 @@ function UILibrary:Window(Table)
 				return setLib
 			end
 
-			function buttonsLibrary:AddParagraph(Text) --  finish
-				local buttonFrame = lib.Create("Frame", tabScrollFrame, {
+			function buttonsLibrary:AddParagraph(Text, Text2)
+				local paraheader = lib.Create("Frame", tabScrollFrame, {
 					BackgroundColor3 = Color3.fromRGB(44, 44, 44), 
 					BackgroundTransparency = 1, 
 					BorderSizePixel = 0, 
@@ -414,10 +468,10 @@ function UILibrary:Window(Table)
 					Size = UDim2.new(1, 0,0.1, 0),
 					--AutomaticSize = "Y",
 				})
-				local buttonFrame_corner = lib.Create("UICorner", buttonFrame, {
+				local buttonFrame_corner = lib.Create("UICorner", paraheader, {
 					CornerRadius = UDim.new(0, 5)
 				})
-				local button = lib.Create("TextLabel", buttonFrame, {
+				local headerbutton = lib.Create("TextLabel", paraheader, {
 					BackgroundColor3 = Color3.fromRGB(44, 44, 44), 
 					BackgroundTransparency = 1, 
 					BorderSizePixel = 0, 
@@ -425,10 +479,43 @@ function UILibrary:Window(Table)
 					Size = UDim2.new(1, 0,1, 0),
 					Font = "GothamMedium",
 					Text = Text,
-					TextSize = 16,
+					TextSize = 14,
 					TextColor3 = Color3.fromRGB(255, 255, 255),
 					TextXAlignment = "Left",
+					AutomaticSize = "Y",
 				})
+				local paratext = lib.Create("Frame", tabScrollFrame, {
+					BackgroundColor3 = Color3.fromRGB(44, 44, 44), 
+					BackgroundTransparency = 0, 
+					BorderSizePixel = 0, 
+					Position = UDim2.new(0, 0,0, 0), 
+					Size = UDim2.new(1, 0,0.1, 0),
+					AutomaticSize = "Y",
+				})
+				local buttonFrame_corner = lib.Create("UICorner", paratext, {
+					CornerRadius = UDim.new(0, 5)
+				})
+				local button = lib.Create("TextLabel", paratext, {
+					BackgroundColor3 = Color3.fromRGB(44, 44, 44), 
+					BackgroundTransparency = 1, 
+					BorderSizePixel = 0, 
+					Position = UDim2.new(0, 0,0, 0), 
+					Size = UDim2.new(1, 0,1, 0),
+					Font = "Gotham",
+					Text = Text2,
+					TextSize = 14,
+					TextColor3 = Color3.fromRGB(255, 255, 255),
+					TextXAlignment = "Left",
+					AutomaticSize = "Y",
+					TextWrapped = true,
+				})
+				local button_padding = lib.Create("UIPadding", button, {
+					PaddingTop = UDim.new(0, 5),
+					PaddingLeft = UDim.new(0, 5),
+					PaddingRight = UDim.new(0, 5),
+					PaddingBottom = UDim.new(0, 5),
+				})
+
 				local setLib = {}
 				function setLib:Set(value)
 					button.Text = value
@@ -444,6 +531,16 @@ function UILibrary:Window(Table)
 					Position = UDim2.new(0, 0,0, 0), 
 					Size = UDim2.new(1, 0,0.1, 0),
 					--AutomaticSize = "Y",
+				})
+				local Button_highlight = lib.Create("Frame", buttonFrame, {
+					ZIndex = 2,
+					BackgroundColor3 = Color3.fromRGB(255, 255, 255),
+					BackgroundTransparency = 1,
+					BorderSizePixel = 0,
+					Size = UDim2.new(1, 0,1, 0),
+				})
+				local Buttonhighlight_corner = lib.Create("UICorner", Button_highlight, {
+					CornerRadius = UDim.new(0, 5)
 				})
 				local buttonFrame_corner = lib.Create("UICorner", buttonFrame, {
 					CornerRadius = UDim.new(0, 5)
@@ -485,8 +582,14 @@ function UILibrary:Window(Table)
 					PaddingRight = UDim.new(0, 8),
 					PaddingBottom = UDim.new(0, 5),
 				})
-
+				button.MouseEnter:Connect(function()
+					lib.Tween(Button_highlight, "BackgroundTransparency", 0.95, "InOut", "Linear", 0.1)
+				end)
+				button.MouseLeave:Connect(function()
+					lib.Tween(Button_highlight, "BackgroundTransparency", 1, "InOut", "Linear", 0.1)
+				end)
 				box.FocusLost:Connect(function(enterPressed, inputThatCausedFocusLost)
+					if not enterPressed then return end
 					local success, err = pcall(function()
 						return Table.Callback(box.Text)
 					end)
@@ -496,7 +599,14 @@ function UILibrary:Window(Table)
 						Warn(err)
 					end
 				end)
-
+				local setLib = {}
+				function setLib:Set(value)
+					box.Text = value
+				end
+				function setLib:Destroy()
+					buttonFrame:Destroy()
+				end
+				return setLib
 			end
 
 			function buttonsLibrary:AddToggle(Table)
@@ -522,6 +632,7 @@ function UILibrary:Window(Table)
 					TextSize = 16,
 					TextColor3 = Color3.fromRGB(255, 255, 255),
 					TextXAlignment = "Left",
+					ZIndex = 2,
 				})
 				local button = lib.Create("TextButton", buttonFrame, {
 					AutoButtonColor = false,
@@ -539,36 +650,31 @@ function UILibrary:Window(Table)
 					Rotation = 180;
 					Transparency = NumberSequence.new(0, 1)
 				})
+				
+				local Toggle = Table.Default or false
 
+				if Table.Key then
+					Keys[Table.Key] = {}
+					Keys[Table.Key]["Value"] = Table.Default or false
+					Toggle = Keys[Table.Key].Value
+				end
+				
 				if (Table.Default) then
 					button.BackgroundColor3 = Color3.fromRGB(85, 170, 127)
 				else
 					button.BackgroundColor3 = Color3.fromRGB(227, 67, 67)
 				end
 
-
-				if config.Save then 
-					UILibrary.Keys[Table.Key] = Filesystem(config.SaveFolderName, Table.Key, "false")
-					print("Init." .. config.SaveFolderName, Table.Key)
-				end
-
-				local Toggle = UILibrary.Keys[Table.Key] --or Table.Default or false
-
 				local function onActivate()
-					if (Toggle) then				
+					
+					if (Toggle) then			
 						Toggle = false
-						if config.Save then 
-							writefile(config.SaveFolderName.."/"..Table.Key..".txt", "true")
-							--UILibrary.Keys[Table.Key] = Filesystem(config.SaveFolderName, Table.Key, "true")
-						end
-						button.BackgroundColor3 = Color3.fromRGB(227, 67, 67)
-					else --not (Toggle) then
+						Keys[Table.Key].Value = Toggle
+						lib.Tween(button, "BackgroundColor3", Color3.fromRGB(227, 67, 67), "InOut", "Linear", 0.1)
+					elseif not (Toggle) then
 						Toggle = true
-						if config.Save then
-							writefile(config.SaveFolderName.."/"..Table.Key..".txt", "false")
-							--UILibrary.Keys[Table.Key] = Filesystem(config.SaveFolderName, Table.Key, "false")
-						end
-						button.BackgroundColor3 = Color3.fromRGB(85, 170, 127)
+						Keys[Table.Key].Value = Toggle
+						lib.Tween(button, "BackgroundColor3", Color3.fromRGB(85, 170, 127), "InOut", "Linear", 0.1)
 					end
 					local success, err = pcall(function()
 						return Table.Callback(Toggle)
@@ -579,7 +685,7 @@ function UILibrary:Window(Table)
 						Warn(err)
 					end
 				end
-				onActivate()
+				--onActivate()
 				button.Activated:Connect(function()
 					onActivate()
 				end)
@@ -587,6 +693,9 @@ function UILibrary:Window(Table)
 				function setLib:Set(value)
 					Toggle = not value
 					onActivate()
+				end
+				function setLib:Destroy()
+					buttonFrame:Destroy()
 				end
 				return setLib
 
@@ -600,6 +709,16 @@ function UILibrary:Window(Table)
 					Position = UDim2.new(0, 0,0, 0), 
 					Size = UDim2.new(1, 0,0.2, 0),
 					--AutomaticSize = "Y",
+				})
+				local Button_highlight = lib.Create("Frame", buttonFrame, {
+					ZIndex = 2,
+					BackgroundColor3 = Color3.fromRGB(255, 255, 255),
+					BackgroundTransparency = 1,
+					BorderSizePixel = 0,
+					Size = UDim2.new(1, 0,1, 0),
+				})
+				local Buttonhighlight_corner = lib.Create("UICorner", Button_highlight, {
+					CornerRadius = UDim.new(0, 5)
 				})
 				local buttonFrame_corner = lib.Create("UICorner", buttonFrame, {
 					CornerRadius = UDim.new(0, 5)
@@ -621,8 +740,8 @@ function UILibrary:Window(Table)
 					BackgroundColor3 = Color3.fromRGB(255, 255, 255), 
 					BackgroundTransparency = 0.95, 
 					BorderSizePixel = 0, 
-					Position = UDim2.new(0, 0,0.5, 0), 
-					Size = UDim2.new(1, 0,0.5, 0),
+					Position = UDim2.new(0.025, 0,0.5, 0), 
+					Size = UDim2.new(0.95, 0,0.35, 0),
 				})
 				local buttonFrame_corner = lib.Create("UICorner", maxFrame, {
 					CornerRadius = UDim.new(0, 5)
@@ -649,15 +768,31 @@ function UILibrary:Window(Table)
 					TextColor3 = Color3.fromRGB(255, 255, 255),
 					ZIndex = 2,
 				})
-
+				
+				button.MouseEnter:Connect(function()
+					lib.Tween(Button_highlight, "BackgroundTransparency", 0.95, "InOut", "Linear", 0.1)
+				end)
+				button.MouseLeave:Connect(function()
+					lib.Tween(Button_highlight, "BackgroundTransparency", 1, "InOut", "Linear", 0.1)
+				end)
+				
 				local mouse = Players.LocalPlayer:GetMouse()
-				local default = Table.Default/Table.Max or Table.Min/Table.Max
+				local current = Table.Default or Table.Min
+				local default = current/Table.Max
+				
+				if Table.Key then
+					Keys[Table.Key] = {}
+					Keys[Table.Key]["Value"] = current
+					--Toggle = Keys[Table.Key].Value
+				end
+				
 				slider.Size = UDim2.new(default, 0,1, 0)
 				local dragging = false
 
 				local function update(value)
 					local int = math.floor(value * Table.Max)
 					label.Text = tostring(int)
+					Keys[Table.Key].Value = int
 					return Table.Callback(int)
 				end
 
@@ -680,7 +815,7 @@ function UILibrary:Window(Table)
 					if input.UserInputType == Enum.UserInputType.MouseButton1 then
 						mainFrame.Draggable = false
 						mainFrame.Active = false
-						print((mouse.X - maxFrame.AbsolutePosition.X) / maxFrame.AbsoluteSize.X)
+						--print((mouse.X - maxFrame.AbsolutePosition.X) / maxFrame.AbsoluteSize.X)
 						local pos = UDim2.new(math.clamp((mouse.X - maxFrame.AbsolutePosition.X) / maxFrame.AbsoluteSize.X, 0, 1), 0, 1, 0)
 						slider:TweenSize(pos, Enum.EasingDirection.Out, Enum.EasingStyle.Linear, 0.1, true, update(pos.X.Scale))
 					end
@@ -697,6 +832,9 @@ function UILibrary:Window(Table)
 					local change = tonumber(value)/Table.Max
 					slider.Size = UDim2.new(change, 0,1, 0)
 					update(change)
+				end
+				function setLib:Destroy()
+					buttonFrame:Destroy()
 				end
 				return setLib
 
@@ -742,7 +880,7 @@ function UILibrary:Window(Table)
 					Position = UDim2.new(0.1, 0,0.1, 0), 
 					Size = UDim2.new(0.8, 0,0.8, 0),
 					ScaleType = Enum.ScaleType.Fit;
-					Image = "rbxassetid://10768481139",
+					Image = "rbxassetid://11113708488",
 					ZIndex = 2
 				})
 				local optionsFrame = lib.Create("Frame", buttonFrame, {
@@ -751,7 +889,7 @@ function UILibrary:Window(Table)
 					BorderSizePixel = 0, 
 					Position = UDim2.new(0, 0,1, 0), 
 					Size = UDim2.new(1, 0,1, 0),
-					ZIndex = 2,
+					ZIndex = 5,
 					--AutomaticSize = "Y",
 					Visible = false,
 				})
@@ -766,7 +904,7 @@ function UILibrary:Window(Table)
 						BorderSizePixel = 0, 
 						Position = UDim2.new(0, 0,0, 0), 
 						Size = UDim2.new(1, 0,1, 0),
-						ZIndex = 2
+						ZIndex = 5
 					})
 					local button = lib.Create("TextButton", buttonFrame, {
 						AutoButtonColor = false,
@@ -780,8 +918,15 @@ function UILibrary:Window(Table)
 						TextSize = 14,
 						TextColor3 = Color3.fromRGB(255, 255, 255),
 						TextXAlignment = "Left",
-						ZIndex = 2
+						ZIndex = 5
 					})
+					
+					if Table.Key then
+						--if Keys[Table.Key] then table.clear(Keys[Table.Key]) return button end
+						Keys[Table.Key] = {}
+						Keys[Table.Key]["Options"] = Table.Options
+					end
+					
 					return button
 				end
 
@@ -790,7 +935,7 @@ function UILibrary:Window(Table)
 				local function onActivate(v)
 					optionsFrame.Visible = false
 					show = false
-					imagebutton.Image = "rbxassetid://10768481139"
+					imagebutton.Image = "rbxassetid://11113708488"
 					local success, err = pcall(function()
 						return Table.Callback(v)
 					end)
@@ -821,11 +966,11 @@ function UILibrary:Window(Table)
 
 				button.MouseButton1Down:Connect(function()
 					if (show) then
-						imagebutton.Image = "rbxassetid://10768481139"
+						imagebutton.Image = "rbxassetid://11113708488"
 						optionsFrame.Visible = false
 						show = false
 					elseif not (show) then
-						imagebutton.Image = "rbxassetid://10768705847"
+						imagebutton.Image = "rbxassetid://11113709353"
 						optionsFrame.Visible = true
 						show = true
 					end
@@ -834,6 +979,9 @@ function UILibrary:Window(Table)
 				local setLib = {}
 				function setLib:Set(v)
 					onActivate(v)
+				end
+				function setLib:Destroy()
+					buttonFrame:Destroy()
 				end
 				function setLib:Refresh(upTable, boolean)
 					if boolean then
@@ -883,6 +1031,16 @@ function UILibrary:Window(Table)
 					Size = UDim2.new(1, 0,0.1, 0),
 					--AutomaticSize = "Y",
 				})
+				local Button_highlight = lib.Create("Frame", buttonFrame, {
+					ZIndex = 2,
+					BackgroundColor3 = Color3.fromRGB(255, 255, 255),
+					BackgroundTransparency = 1,
+					BorderSizePixel = 0,
+					Size = UDim2.new(1, 0,1, 0),
+				})
+				local Buttonhighlight_corner = lib.Create("UICorner", Button_highlight, {
+					CornerRadius = UDim.new(0, 5)
+				})
 				local buttonFrame_corner = lib.Create("UICorner", buttonFrame, {
 					CornerRadius = UDim.new(0, 5)
 				})
@@ -922,10 +1080,22 @@ function UILibrary:Window(Table)
 					PaddingRight = UDim.new(0, 8),
 					PaddingBottom = UDim.new(0, 5),
 				})
-
+				
+				labelbutton.MouseEnter:Connect(function()
+					lib.Tween(Button_highlight, "BackgroundTransparency", 0.95, "InOut", "Linear", 0.1)
+				end)
+				labelbutton.MouseLeave:Connect(function()
+					lib.Tween(Button_highlight, "BackgroundTransparency", 1, "InOut", "Linear", 0.1)
+				end)
+				
 				local key = Table.Default
 				local focus = false
-
+				
+				if Table.Key then
+					Keys[Table.Key] = {}
+					Keys[Table.Key]["Value"] = Table.Default
+				end
+				
 				InputButton.Activated:Connect(function()
 					focus = true
 					InputButton.Text = "..."
@@ -945,6 +1115,7 @@ function UILibrary:Window(Table)
 						key = input.KeyCode
 						focus = false
 						InputButton.Text = key.Name
+						Keys[Table.Key].Value = key
 					end
 
 				end)
@@ -952,7 +1123,11 @@ function UILibrary:Window(Table)
 				local setLib = {}
 				function setLib:Set(value)
 					key = value
+					Keys[Table.Key].Value = key
 					InputButton.Text = key.Name
+				end
+				function setLib:Destroy()
+					buttonFrame:Destroy()
 				end
 				return setLib
 
@@ -965,11 +1140,11 @@ function UILibrary:Window(Table)
 		return sectionLibrary
 
 	end
-
+	mainFrame.Visible = true
+	Sys('<font color="rgb(85, 170, 127)">Loaded!</font>', "["..cache.HubName.."] "  .. cache.ScriptName .. " by " .. cache.Creator .. ", press '" ..  cache.Hotkey .. "' to toggle UI.")
 	return tabLibrary
 
 end
-
 
 function UILibrary:Notification(Table)
 	spawn(function()
@@ -1019,21 +1194,22 @@ function UILibrary:Notification(Table)
 			local title_padding = lib.Create("UIPadding", title, {
 				PaddingLeft = UDim.new(0, 10),
 			}) 
-			local content = lib.Create("TextBox", frame, {
+			local content = lib.Create("TextButton", frame, {
 				AutomaticSize = "X",
 				BackgroundColor3 = Color3.fromRGB(255, 255, 255), 
 				BackgroundTransparency = 1, 
 				BorderSizePixel = 1, 
 				Position = UDim2.new(0, 0,0, 0), 
 				Size = UDim2.new(0.05, 0,1, 0),
-				ClearTextOnFocus = false,
+				--ClearTextOnFocus = false,
 				Font = "Gotham",
 				Text = Table.Content,
-				PlaceholderText = "monke",
+				--PlaceholderText = "monke",
 				TextSize = 14,
 				TextColor3 = Color3.fromRGB(255, 255, 255),
-				TextEditable = false,
-				PlaceholderColor3 = Color3.fromRGB(255, 255, 255),
+				--TextEditable = false,
+				--PlaceholderColor3 = Color3.fromRGB(255, 255, 255),
+				RichText = true,
 			})
 			local content_padding = lib.Create("UIPadding", content, {
 				PaddingLeft = UDim.new(0, 10),
@@ -1042,12 +1218,21 @@ function UILibrary:Notification(Table)
 		end
 
 		local delay_ = Table.Time or 5
+
 		local frame, frame_stroke, title, content = gen()
 
-		--content.Focused:Connect(function()
-		--	setclipboard(content.Text)
-		--	UILibrary:Notification({Title = "Script", Content = "content copied to clipboard!"})
-		--end)
+		content.Activated:Connect(function()
+			if typeof(setclipboard) == "function" then
+				setclipboard(content.Text)
+				UILibrary:Notification({Title = "Console", Content = "content copied to clipboard!"})
+			else
+				for _, v in pairs(textlog) do
+					print(v.Title or "Error", v.Content)
+					print(" ")
+				end
+				UILibrary:Notification({Title = "Console", Content = "[F9] Check Devconsole for script logs"})
+			end
+		end)
 
 		table.insert(instanceLog, frame)
 		table.insert(textlog, Table)
@@ -1067,29 +1252,24 @@ function Warn(err)
 		Content = err,
 	})
 end
-
-function Filesystem(folder, file, value) -- Checks if the executor has filesystem
-	if typeof(isfolder) == "function" then
-		if isfolder(folder) then
-			if isfile(folder.."/"..file..".txt") then
-				local toReturn = readfile(folder.."/"..file..".txt")
-				print("Read " .. folder.."/"..file..".txt" , toReturn)		
-				return toReturn
-			else
-				local toReturn = writefile(folder.."/"..file..".txt", value)
-				print("Created "..folder.."/"..file..".txt", value)
-				return toReturn
-			end
-		else
-			makefolder(folder)
-			UILibrary:Notification({Title = '<font color="rgb(85, 170, 127)">Saves</font>', Content = "Saving " .. folder .. " into client workspace"})
-		end
-	else
-		Warn("[Save] Your client does not have a filesystem")
-		return false
-	end
+function Sys(Title, Content, Time)
+	UILibrary:Notification({
+		Title = Title,
+		Content = Content,
+		Time = Time or 5
+	})
 end
---Filesystem(Test1..game.PlaceId, flag, default)
+
+function UILibrary:Get(str)
+	if not Keys[str] then Warn("Key : " .. str .. " not found.") return end
+	local toReturn
+	if Keys[str].Options then
+		toReturn = Keys[str].Options
+	else
+		toReturn = Keys[str].Value
+	end
+	return toReturn
+end
 function UILibrary:Destroy()
 	screenGui:Destroy()
 end
