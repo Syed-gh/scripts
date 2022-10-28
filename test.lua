@@ -669,11 +669,15 @@ function UILibrary:Window(Table)
 					
 					if (Toggle) then			
 						Toggle = false
-						Keys[Table.Key].Value = Toggle
+						if Table.Key then
+							Keys[Table.Key].Value = Toggle
+						end
 						lib.Tween(button, "BackgroundColor3", Color3.fromRGB(227, 67, 67), "InOut", "Linear", 0.1)
 					elseif not (Toggle) then
 						Toggle = true
-						Keys[Table.Key].Value = Toggle
+						if Table.Key then
+							Keys[Table.Key].Value = Toggle
+						end
 						lib.Tween(button, "BackgroundColor3", Color3.fromRGB(85, 170, 127), "InOut", "Linear", 0.1)
 					end
 					local success, err = pcall(function()
@@ -792,7 +796,9 @@ function UILibrary:Window(Table)
 				local function update(value)
 					local int = math.floor(value * Table.Max)
 					label.Text = tostring(int)
-					Keys[Table.Key].Value = int
+					if Table.Key then
+						Keys[Table.Key].Value = int
+					end
 					return Table.Callback(int)
 				end
 
@@ -1115,7 +1121,9 @@ function UILibrary:Window(Table)
 						key = input.KeyCode
 						focus = false
 						InputButton.Text = key.Name
-						Keys[Table.Key].Value = key
+						if Table.Key then
+							Keys[Table.Key].Value = key
+						end
 					end
 
 				end)
@@ -1123,7 +1131,9 @@ function UILibrary:Window(Table)
 				local setLib = {}
 				function setLib:Set(value)
 					key = value
-					Keys[Table.Key].Value = key
+					if Table.Key then
+						Keys[Table.Key].Value = key
+					end
 					InputButton.Text = key.Name
 				end
 				function setLib:Destroy()
@@ -1275,3 +1285,4 @@ function UILibrary:Destroy()
 end
 
 return UILibrary
+
