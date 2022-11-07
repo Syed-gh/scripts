@@ -345,7 +345,7 @@ function UILibrary:Window(Table)
 				BackgroundTransparency = 1, 
 				BorderSizePixel = 1, 
 				Position = UDim2.new(0, 0,0, 0), 
-				Size = UDim2.new(1, 0,0, 0),
+				Size = UDim2.new(1, 0,0.1, 0),
 				AutomaticSize = "Y",
 				Visible = true, 
 
