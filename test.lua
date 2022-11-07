@@ -360,14 +360,14 @@ function UILibrary:Window(Table)
 				BackgroundTransparency = 1, 
 				BorderSizePixel = 0, 
 				Position = UDim2.new(0, 0,0, 0), 
-				Size = UDim2.new(1, 0,0.85, 0), -- scale y 0.1 
+				Size = UDim2.new(1, 0,1, 0), -- scale y 0.1 
 			})
 			local sectionlabel = lib.Create("TextLabel", sectionLabelFrame, {
 				BackgroundTransparency = 1, 
-				AnchorPoint = Vector2.new(0,0),
+				AnchorPoint = Vector2.new(0,0.5),
 				BorderSizePixel = 0, 
-				Position = UDim2.new(0, 0,0, 0), 
-				Size = UDim2.new(1, 0,1, 0),
+				Position = UDim2.new(0, 0,0.5, 0), 
+				Size = UDim2.new(1, 0,.55, 0),
 				Font = "GothamMedium",
 				Text = Text,
 				TextScaled = true,
