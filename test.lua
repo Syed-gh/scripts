@@ -1,12 +1,12 @@
 local UILibrary = {}
 
 
-local lib = require(script.Parent.ModuleScript)
+local lib = loadstring(game:HttpGet("https://raw.githubusercontent.com/Player788/luau1/main/lib.lua"))()
 local Players = game:GetService("Players")
 local RunService = game:GetService("RunService")
 local UserInputService = game:GetService("UserInputService")
 
-local screenGui = lib.Create("ScreenGui", game.Players.LocalPlayer.PlayerGui--[[game.CoreGui]], {
+local screenGui = lib.Create("ScreenGui", game.CoreGui, {
 	IgnoreGuiInset = true,
 	ResetOnSpawn = false,
 })
